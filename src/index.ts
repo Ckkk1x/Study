@@ -50,46 +50,46 @@ arr1.sort(); // in aumenting order
 
 //================ List ================
 
-class MyNode {
-    data: any;
-    next: MyNode | null = null;
+class MyNode<T> {
+    data: T;
+    next: MyNode<T> | null = null;
     
     constructor(data: any) {
         this.data = data;
     }
 }
 
-class LinkedList {
-    head: MyNode | null = null;
+class LinkedList<T> {
+    head: MyNode<T> | null = null;
 
     // Вставка в начало
-    insertAtBeginning(data: any) {
-        let newNode = new MyNode(data);
+    insertAtBeginning(data: T) {
+        let newNode = new MyNode<T>(data);
         newNode.next = this.head;
         this.head = newNode;
     }
 
     // Вставка в конец
-    insertAtEnd(data: any) {
-        let newNode = new MyNode(data);
+    insertAtEnd(data: T) {
+        let newNode = new MyNode<T>(data);
         if (this.head === null) {
             this.head = newNode;
             return;
         }
         let current = this.head;
         while (current.next !== null) {
-            current = current.next as MyNode;
+            current = current.next as MyNode<T>;
         }
         current.next = newNode;
     }
 
     // Вставка в середину
-    insertAt(index: number, data: any) {
+    insertAt(index: number, data: T) {
         if (index === 0) {
             this.insertAtBeginning(data);
             return;
         }
-        let newNode = new MyNode(data);
+        let newNode = new MyNode<T>(data);
         let current = this.head;
         let count = 0;
         while (current !== null && count < index - 1) {
@@ -102,7 +102,7 @@ class LinkedList {
     }
 
     // Получение элемента по индексу
-    getElementAt(index: number): any {
+    getElementAt(index: number): T | null {
         let current = this.head;
         let count = 0;
         while (current !== null) {
@@ -120,7 +120,7 @@ class LinkedList {
             this.head = this.head.next;
             return;
         }
-        let current = this.head as MyNode | null;
+        let current = this.head as MyNode<T> | null;
         let prev = null;
         let count = 0;
         while (current !== null && count !== index) {
@@ -133,7 +133,7 @@ class LinkedList {
     }
 
     // Метод forEach
-    forEach(callback: (data: any) => void) {
+    forEach(callback: (data: T) => void) {
         let current = this.head;
         while (current !== null) {
             callback(current.data);
@@ -142,7 +142,7 @@ class LinkedList {
     }
 }
 
-let list = new LinkedList();
+let list = new LinkedList<number>();
 list.forEach((data) => console.log(data));
 
 
@@ -307,5 +307,231 @@ set.delete(2); // O(1)
 
 set.forEach((value) => console.log(value)); // O(n)
 
+
+
+//================ Map ================
+
+// INSERT
+let map = new Map<string, number>();
+map.set("a", 1); // O(1) insert into map
+map.set("b", 2); // O(1) insert into map
+map.set("c", 3); // O(1) insert into map
+
+// OBTAIN
+let valueA = map.get("a"); // O(1) obtain by key
+console.log(valueA); // Output: 1
+
+// DELETE
+map.delete("b"); // O(1) deletion from map
+
+map.forEach((value, key) => console.log(key, value)); // O(n) iteration through the map
+
 // Additional methods
-// - same as array
+map.clear(); // Removes all elements from the map
+let size = map.size; // Returns the number of elements in the map
+
+
+//================ Stack ================
+
+class Stack<T> {
+    private items: T[] = [];
+
+    // Вставка элемента
+    push(element: T): void {
+        this.items.push(element); // O(1)
+    }
+
+    // Удаление элемента
+    pop(): T | undefined {
+        return this.items.pop(); // O(1)
+    }
+
+    // Получение верхнего элемента
+    peek(): T | undefined {
+        return this.items[this.items.length - 1]; // O(1)
+    }
+
+    // Проверка на пустоту
+    isEmpty(): boolean {
+        return this.items.length === 0; // O(1)
+    }
+
+    // Получение размера стека
+    size(): number {
+        return this.items.length; // O(1)
+    }
+
+    // Итерация по стеку
+    forEach(callback: (item: T) => void): void {
+        this.items.forEach(callback); // O(n)
+    }
+}
+
+// INSERT
+let stack = new Stack<number>();
+stack.push(1); // O(1) insert into stack
+stack.push(2); // O(1) insert into stack
+stack.push(3); // O(1) insert into stack
+
+stack.forEach((value) => console.log(value)); // O(n) iteration through the stack
+
+// OBTAIN
+let top1 = stack.peek(); // O(1) obtain the top element
+console.log(top1); // Output: 3
+
+// DELETE
+let removed = stack.pop(); // O(1) delete the top element
+console.log(removed); // Output: 3
+
+stack.forEach((value) => console.log(value)); // O(n) iteration through the stack
+
+// Additional methods
+console.log(stack.isEmpty()); // Check if stack is empty (O(1))
+console.log(stack.size());    // Get the size of the stack (O(1))
+
+
+
+//================ Queue & Deque ================
+
+class Deque<T> {
+    private items: T[] = [];
+
+    // Вставка элемента в начало
+    addFront(element: T): void {
+        this.items.unshift(element); // O(n)
+    }
+
+    // Вставка элемента в конец
+    addBack(element: T): void {
+        this.items.push(element); // O(1)
+    }
+
+    // Удаление элемента из начала
+    removeFront(): T | undefined {
+        return this.items.shift(); // O(1)
+    }
+
+    // Удаление элемента из конца
+    removeBack(): T | undefined {
+        return this.items.pop(); // O(1)
+    }
+
+    // Получение первого элемента
+    front(): T | undefined {
+        return this.items[0]; // O(1)
+    }
+
+    // Получение последнего элемента
+    back(): T | undefined {
+        return this.items[this.items.length - 1]; // O(1)
+    }
+
+    // Проверка на пустоту
+    isEmpty(): boolean {
+        return this.items.length === 0; // O(1)
+    }
+
+    // Получение размера deque
+    size(): number {
+        return this.items.length; // O(1)
+    }
+
+    // Итерация по deque
+    forEach(callback: (item: T) => void): void {
+        this.items.forEach(callback); // O(n)
+    }
+}
+
+// INSERT
+let deque = new Deque<number>();
+deque.addFront(1); // O(n) insert at the front
+deque.addBack(2);  // O(1) insert at the back
+deque.addFront(0); // O(n) insert at the front
+
+deque.forEach((value) => console.log(value)); // O(n) iteration through the deque
+
+// OBTAIN
+let firstDeque = deque.front(); // O(1) obtain the first element
+console.log(firstDeque); // Output: 0
+let lastDeque = deque.back(); // O(1) obtain the last element
+console.log(lastDeque); // Output: 2
+
+// DELETE
+let removedFront = deque.removeFront(); // O(1) delete the first element
+console.log(removedFront); // Output: 0
+let removedBack = deque.removeBack(); // O(1) delete the last element
+console.log(removedBack); // Output: 2
+
+deque.forEach((value) => console.log(value)); // O(n) iteration through the deque
+
+// Additional methods
+console.log(deque.isEmpty()); // Check if deque is empty (O(1))
+console.log(deque.size());    // Get the size of the deque (O(1))
+
+
+
+
+
+//================ Hash-table & Hash-map ================
+
+// INSERT
+let hashTable: { [key: string]: number } = {};
+hashTable["a"] = 1; // O(1) insert into hash table
+hashTable["b"] = 2; // O(1) insert into hash table
+hashTable["c"] = 3; // O(1) insert into hash table
+
+// OBTAIN
+let valueA1 = hashTable["a"]; // O(1) obtain by key
+console.log(valueA1); // Output: 1
+
+// DELETE
+delete hashTable["b"]; // O(1) deletion from hash table
+
+// Additional methods
+let hasKey = "a" in hashTable;          // Check if key exists (O(1))
+let keys = Object.keys(hashTable);      // Get all keys (O(n))
+let values = Object.values(hashTable);  // Get all values (O(n))
+
+
+
+
+
+
+//================ Some methods ================
+
+//================ Some methods ================
+
+// Array
+let arrSM: number[][];
+arrSM = [[1, 5, 6], [2, 8, 4], [3, 7, 9]];
+arrSM = arrSM.flat();      // Использование метода flat
+arrSM.sort((a, b) => a - b); // Использование метода sort
+
+// Map
+let mapSM = new Map<string, number>();
+mapSM.set("a", 1);         // Добавление элемента
+mapSM.set("b", 2);         // Добавление элемента
+mapSM.set("c", 3);         // Добавление элемента
+mapSM.delete("b");         // Удаление элемента
+let hasKeyA = mapSM.has("a"); // Проверка наличия ключа
+let sizeMap = mapSM.size;  // Получение размера
+mapSM.forEach((value, key) => {}); // Итерация по элементам
+
+// Set
+let setSM = new Set<number>();
+setSM.add(1);              // Добавление элемента
+setSM.add(2);              // Добавление элемента
+setSM.add(3);              // Добавление элемента
+setSM.delete(2);           // Удаление элемента
+let hasValue1 = setSM.has(1); // Проверка наличия значения
+let sizeSet = setSM.size;  // Получение размера
+setSM.forEach((value) => {}); // Итерация по элементам
+
+// String
+let strSM: string = " Hello, World! ";
+let trimmedStr: string = strSM.trim(); // Удаление пробелов
+let upperStr: string = strSM.toUpperCase(); // Преобразование в верхний регистр
+let lowerStr: string = strSM.toLowerCase(); // Преобразование в нижний регистр
+let replacedStr: string = strSM.replace("World", "TypeScript"); // Замена подстроки
+let strArray: string[] = strSM.split(","); // Разделение строки на массив
+let lengthStr: number = strSM.length; // Получение длины строки
