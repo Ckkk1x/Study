@@ -1,0 +1,68 @@
+// Указываем источник данных и генератор клиента
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Описание модели User (пользователь)
+model User {
+  id        Int      @id @default(autoincrement()) // Уникальный идентификатор
+  name      String   // Имя пользователя
+  email     String   @unique // Электронная почта, уникальная
+  places    Place[]  // Список мест, связанных с пользователем
+  events    Event[]  // Список событий, связанных с пользователем
+  payments  Payment[] // Список оплат, связанных с пользователем
+  profile   Profile? // Связь с моделью Profile (один к одному)
+}
+
+model Profile {
+  id        Int     @id @default(autoincrement())
+  phone     String?
+  userId    Int     @unique
+  user      User    @relation(fields: [userId], references: [id])
+}
+
+// Описание модели Place (место)
+model Place {
+  id        Int      @id @default(autoincrement()) // Уникальный идентификатор
+  name      String   // Название места
+  location  String   // Локация места
+  userId    Int      // Идентификатор пользователя, который создал место
+  user      User     @relation(fields: [userId], references: [id]) // Связь с моделью User
+  events    Event[]  // Список событий, связанных с местом
+}
+
+model Location {
+  id        Int     @id @default(autoincrement())
+  name      String
+  latitude  Float
+  longitude Float
+}
+
+// Описание модели Event (событие)
+model Event {
+  id          Int      @id @default(autoincrement()) // Уникальный идентификатор
+  name        String   // Название события
+  description String   // Описание события
+  date        DateTime // Дата события
+  userId      Int      // Идентификатор пользователя, который создал событие
+  placeId     Int      // Идентификатор места, где проходит событие
+  user        User     @relation(fields: [userId], references: [id]) // Связь с моделью User
+  place       Place    @relation(fields: [placeId], references: [id]) // Связь с моделью Place
+  payments    Payment[] // Список оплат, связанных с событием
+}
+
+// Описание модели Payment (оплата)
+model Payment {
+  id        Int      @id @default(autoincrement()) // Уникальный идентификатор
+  method    String   // Метод оплаты (например, карта, PayPal)
+  status    String   // Статус оплаты (например, подтверждено, ожидается)
+  eventId   Int      // Идентификатор события, к которому относится оплата
+  userId    Int      // Идентификатор пользователя, который сделал оплату
+  event     Event    @relation(fields: [eventId], references: [id]) // Связь с моделью Event
+  user      User     @relation(fields: [userId], references: [id]) // Связь с моделью User
+}
